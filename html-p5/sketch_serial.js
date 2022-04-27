@@ -5,6 +5,19 @@ let serial;
 let LatestSerialData = "waiting for data...";
 
 
+
+
+
+function gotDataFromFile(some_string) {
+	wrist_data = split(some_string.toString(), ",")
+	x = int(wrist_data[0])
+	y = int(wrist_data[1])
+}
+
+function get_data_from_file() {
+	loadStrings("right-wrist.csv", gotDataFromFile)
+}
+
 function setup_serial_stuff() {
 	serial = new p5.SerialPort();
 	serial.list();
@@ -52,24 +65,14 @@ function gotSerialData() {
 }
 
 
+
+
 function setup() {
 	print(displayWidth, displayHeight)
 	createCanvas(displayWidth, displayHeight)
 	background(255)
 	setInterval(get_data_from_file, 100)
 	setup_serial_stuff()
-}
-
-
-function get_data_from_file() {
-	loadStrings("right-wrist.csv", gotDataFromFile)
-}
-
-
-function gotDataFromFile(some_string) {
-	wrist_data = split(some_string.toString(), ",")
-	x = int(wrist_data[0])
-	y = int(wrist_data[1])
 }
 
 
@@ -124,9 +127,10 @@ function draw() {
 	  	stroke(stroke_color); // Change the color
 
 		if (distance) {
-			strokeWeight(distance/10); // set the stroke weight based on the distance
+			distance = distance/10;
+			strokeWeight(distance); // set the stroke weight based on the distance
 		}
-		console.log(`Button is pressed! x: ${x}, y: ${y}, on/off: ${on_off}, distance: ${distance/10}/, color: ${stroke_color}`)
+		console.log(`Button is pressed! x: ${x}, y: ${y}, on/off: ${on_off}, distance: ${distance}, color: ${stroke_color}`)
 		draw_a_point(x, y)
 
 	} else {

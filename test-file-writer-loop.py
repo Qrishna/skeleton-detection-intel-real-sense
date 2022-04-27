@@ -11,7 +11,7 @@ while x<1440/2:
         # print("%s,%s\r\n" %(x, y) )
         fp.write("%s,%s\r\n" %(x, y) )
         # time.sleep(0.9)
-        print("%s,%s\r" %(x, y))
+        #print("%s,%s\r" %(x, y))
         x+=1
         y+=1
     if x == (1440/2-1):

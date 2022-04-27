@@ -48,7 +48,7 @@ function gotSerialData() {
 	trim(currentString);
 
 	if (!currentString) return;
-	LatestSerialData = currentString;
+	LatestSerialData = currentString.split(",");
 }
 
 
@@ -75,35 +75,60 @@ function gotDataFromFile(some_string) {
 
 function draw_a_point(x, y) {
 	if ((x) && (y)) {
-		print("Here are the x,y: ", x, y)
+		// print("Here are the x,y: ", x, y)
 		for (let i = 0; i < 100; i++) {
 			let paintX = x + random(-20, 20);
 			let paintY = y + random(-20, 20);
 			point(paintX, paintY)
 		}
-		// point(x + random(-10, 10), y + random(-10, 10));
 	}
 }
 
+function determine_stroke_color(some_color_code){
+	let stroke_color = '';
+	switch (some_color_code) {
+		  case '2':
+		    stroke_color = 'purple'
+			break;
+		  case '3':
+			  stroke_color = 'blue'
+			  break;
+		  case '4':
+			  stroke_color = 'cyan'
+			break;
+		  case '5':
+			  stroke_color = 'red'
+			  break;
+		  default:
+			stroke_color = 'black'
+		}
+	return stroke_color;
+}
 
 function draw() {
 	fill(0)
 	translate(width / 2, height / 2);
 	scale(1, -1);
-	stroke('purple'); // Change the color
+
 	// strokeWeight(20);
 
 
 	// main logic
-	let on_off = LatestSerialData
+	let on_off = LatestSerialData[0]
+	let color_code = LatestSerialData[1]
+	let distance = LatestSerialData[2]
 
-	// need to read the distance and color
-	let distance = 5
-	let color = 'purple'
 
-	if (on_off == 0) {
-		console.log("Button is pressed! x, y, on/off, distance, color::", x, y, on_off, distance, color)
+	if (on_off == 1) {
+		let stroke_color = determine_stroke_color(color_code);
+	  	stroke(stroke_color); // Change the color
+
+		if (distance) {
+			strokeWeight(distance); // set the stroke weight based on the distance
+		}
+		console.log(`Button is pressed! x: ${x}, y: ${y}, on/off: ${on_off}, distance: ${distance}, color: ${stroke_color}`)
 		draw_a_point(x, y)
+
 	} else {
 		console.log("Button is not pressed. Waiting for it to be pressed...")
 	}

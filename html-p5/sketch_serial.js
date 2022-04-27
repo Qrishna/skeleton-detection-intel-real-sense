@@ -124,9 +124,9 @@ function draw() {
 	  	stroke(stroke_color); // Change the color
 
 		if (distance) {
-			strokeWeight(distance); // set the stroke weight based on the distance
+			strokeWeight(distance/10); // set the stroke weight based on the distance
 		}
-		console.log(`Button is pressed! x: ${x}, y: ${y}, on/off: ${on_off}, distance: ${distance}, color: ${stroke_color}`)
+		console.log(`Button is pressed! x: ${x}, y: ${y}, on/off: ${on_off}, distance: ${distance/10}/, color: ${stroke_color}`)
 		draw_a_point(x, y)
 
 	} else {

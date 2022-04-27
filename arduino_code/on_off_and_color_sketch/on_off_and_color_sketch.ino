@@ -1,3 +1,10 @@
+#include <Wire.h>
+#include <LIDARLite.h>
+
+// Globals for lidar sensor
+LIDARLite lidarLite;
+int cal_cnt = 0;
+
 // define for position switch
 #define pos2 A2
 #define pos3 A3
@@ -28,6 +35,11 @@ void setup() {
   pinMode(pos4, INPUT);
   pinMode(pos5, INPUT);
 
+  // for lidar
+  lidarLite.begin(0, true); // Set configuration to default and I2C to 400 kHz
+  lidarLite.configure(0); // Change this number to try out alternate configurations
+
+
 }
 
 
@@ -40,7 +52,7 @@ int flip_on_off(int x) {
 
 // the loop routine runs over and over again forever:
 void loop() {
-  
+
   // position stuff
   int pos2_status = digitalRead(pos2);
   int pos3_status = digitalRead(pos3);
@@ -62,14 +74,27 @@ void loop() {
   // on-off stuff
   int button_state = digitalRead(push_button);
   // end of on-off stuff
-  
-  char buffer[50];
-  // for diagnosis use this line and see the status of all the positions along with the color code
-  // sprintf(buffer, "%d,%d,%d,%d,%d,%d", flip_on_off(button_state), pos2_status, pos3_status, pos4_status, pos5_status, color_code);
 
-  // for now assume distance from lidar is some value like 5
-  int distance = 5;
-  
+
+  // lidar stuff
+  int distance;
+
+  // At the beginning of every 100 readings,
+  // take a measurement with receiver bias correction
+  if ( cal_cnt == 0 ) {
+    distance = lidarLite.distance();      // With bias correction
+  } else {
+    distance = lidarLite.distance(false); // Without bias correction
+  }
+
+  // Increment reading counter
+  cal_cnt++;
+  cal_cnt = cal_cnt % 100;
+
+  // end of lidar stuff
+
+  char buffer[50];
+
   sprintf(buffer, "%d,%d,%d", flip_on_off(button_state), color_code, distance);
   Serial.println(buffer);
   delay(1); // delay in between reads for stability
